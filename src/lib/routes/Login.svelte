@@ -1,43 +1,35 @@
 <script>
     import { API_URL } from "../modules/settings.js";
     import { fetchPostJsonFormData } from "../modules/utils.js";
+    import { onMount } from "svelte";
     import toastr from "toastr";
 
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        let initialized = false;
-        init();
-
-        async function init() {
-            const form = document.querySelector("#form");
-            toastr.options = {
-                positionClass: 'toast-bottom-left'
-            };
-            
-            if (!initialized) {
-                form.addEventListener("submit", async (event) => {
-                    event.preventDefault();
-                    console.log("Tried to log in");
-                    try {
-                        const response = await fetchPostJsonFormData(API_URL + "login", form);
-                        console.log("api/login response:", response);
-                        if (response.data !== undefined) {
-                            toastr.success("Logged in successfully!")
-                            window.location.href = "/";
-                        } else {
-                            if (response.message !== undefined) {
-                                toastr.error(response.message);
-                            } else {
-                                toastr.warning("Bad credentials");
-                            }
-                        }
-                    } catch (error) {
-                        toastr.error(error.message);
+    onMount(() => {
+        const form = document.querySelector("#form");
+        toastr.options = {
+            positionClass: "toast-bottom-left",
+        };
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            toastr.info("Logging in...");
+            try {
+                const response = await fetchPostJsonFormData(API_URL + "login", form);
+                if (response.data !== undefined) {
+                    toastr.success("Logged in successfully!");
+                    setTimeout(function () {
+                        window.location.href = "/";
+                    }, 1500);
+                } else {
+                    if (response.message !== undefined) {
+                        toastr.error(response.message);
+                    } else {
+                        toastr.warning("Bad credentials!");
                     }
-                });
-                initialized = true;
+                }
+            } catch (error) {
+                toastr.error(error.message);
             }
-        }
+        });
     });
 </script>
 
@@ -51,7 +43,7 @@
                     <label for="username">Username</label>
                 </div>
                 <div class="col-6">
-                    <input type="text" id="username" name="username" />
+                    <input type="text" id="username" name="username" required/>
                 </div>
             </div>
             <br />
@@ -60,7 +52,7 @@
                     <label for="password">Password</label>
                 </div>
                 <div class="col-6">
-                    <input type="password" id="password" name="password" />
+                    <input type="password" id="password" name="password" required/>
                 </div>
             </div>
             <br />

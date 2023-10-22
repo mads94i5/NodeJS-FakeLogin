@@ -22,8 +22,6 @@
           <Route path="/"><Home /></Route>
           <Route path="/login"><Login /></Route>
           <Route path="/register"><Register /></Route>
-          <Route path="/api/login"></Route>
-          <Route path="/api/register"></Route>
       </div>
   </header>
 </Router>
